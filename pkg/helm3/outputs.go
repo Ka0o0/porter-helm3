@@ -1,6 +1,7 @@
 package helm3
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -14,7 +15,8 @@ func getSecret(client kubernetes.Interface, namespace, name, key string) ([]byte
 	if namespace == "" {
 		namespace = "default"
 	}
-	secret, err := client.CoreV1().Secrets(namespace).Get(name, metav1.GetOptions{})
+
+	secret, err := client.CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
 		return nil, fmt.Errorf("error getting secret %s from namespace %s: %s", name, namespace, err)
 	}
